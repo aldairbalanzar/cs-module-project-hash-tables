@@ -20,9 +20,15 @@ class HashTable:
     Implement this.
     """
 
-    def __init__(self, capacity):
+    def __init__(self, capacity=MIN_CAPACITY):
         # Your code here
+        if type(capacity) is str:
+            print('this needs to be an integer')
+        self.capacity = capacity
+        self.table = [None] * int(   capacity)
 
+
+        
 
     def get_num_slots(self):
         """
@@ -35,7 +41,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        return len(self.table)
 
     def get_load_factor(self):
         """
@@ -54,6 +60,13 @@ class HashTable:
         """
 
         # Your code here
+        hval = 0x811c9dc5
+        fnv_32_prime = 0x01000193
+        uint32_max = 2 ** 32
+        for s in key:
+            hval = hval ^ ord(s)
+            hval = (hval * fnv_32_prime) % uint32_max
+        return hval
 
 
     def djb2(self, key):
@@ -63,6 +76,10 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for x in key:
+            hash = ((hash << 5)+hash)+ord(x)
+        return hash & 0xFFFFFFFF
 
 
     def hash_index(self, key):
@@ -82,7 +99,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        key_hash = self.hash_index(key)
+        self.table[key_hash] = value
 
     def delete(self, key):
         """
@@ -93,6 +111,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        key_hash = self.hash_index(key)
+        self.table[key_hash] = None
 
 
     def get(self, key):
@@ -104,6 +124,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        key_hash = self.hash_index(key)
+        return self.table[key_hash]
 
 
     def resize(self, new_capacity):
@@ -114,6 +136,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+
 
 
 
