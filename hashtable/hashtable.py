@@ -16,8 +16,6 @@ class HashTable:
     """
     A hash table that with `capacity` buckets
     that accepts string keys
-
-    Implement this.
     """
 
     def __init__(self, capacity=MIN_CAPACITY):
@@ -30,21 +28,11 @@ class HashTable:
         self.size = 0
 
     def get_num_slots(self):
-        """
-        Return the length of the list you're using to hold the hash
-        table data. (Not the number of items stored in the hash table,
-        but the number of slots in the main list.)
-
-        One of the tests relies on this.
-
-        Implement this.
-        """
         # Your code here
-        return len(self.table)
+        return self.capacity
 
     def get_load_factor(self):
         # Your code here
-
         return self.size / self.capacity
 
     def fnv1(self, key):
@@ -87,37 +75,38 @@ class HashTable:
 
     def put(self, key, value):
         # Your code here
-
+#Day 1:
         # key_hash = self.hash_index(key)
         # self.table[key_hash] = value
-
+#Day 2:
         # after hashing, use that hash as the index
         index = self.hash_index(key)
         node = self.table[index]
 
         if node is None:
             self.table[index] = HashTableEntry(key, value)
+            self.size += 1
+        else: 
+            while node:
+                current = node
 
-        while node:
-            current = node
+                # check if key already exists, if so, update with new value
+                if current.key == key:
+                    current.value = value
+                    return value
 
-            # check if key already exists, if so, update with new value
-            if current.key == key:
-                current.value = value
+                # if was not found and reached end, create new entry
+                if current.next == None:
+                    current.next = HashTableEntry(key, value)
+                    # increase size by 1
+                    self.size +=1
+                    return current.next.value
 
-            # if was not found and reached end, create new entry
-            if current.next == None:
-                current.next = HashTableEntry(key, value)
-                # increase size by 1
-                self.size +=1
-
-            current = current.next
+                node = current.next
 
         if self.get_load_factor() > 0.7:
-            new_hash_table = HashTable(self.capacity * 2)
-
-            for i in range(self.capacity):
-                new_hash_table.table.append(i)
+            print(f'LOAD_FACTOR : {self.get_load_factor()}')
+            self.resize(self.capacity * 2)
             
 
     def delete(self, key):
@@ -131,17 +120,17 @@ class HashTable:
         node = self.table[index]
 
         if node == None:
-            print(f'{key} does not exist in hash table')
+            # print(f'{key} does not exist in hash table')
             return None
 
         while node:
             current = node
 
             if current.key == key:
-                self.table[key] = current.next
+                self.table[index] = current.next
                 self.size -= 1
 
-            current = current.next
+            node = current.next
 
 
     def get(self, key):
@@ -158,7 +147,7 @@ class HashTable:
         if node == None:
             return None
         
-        while node and node.key != key:
+        while node:
             if node.key == key:
                 return node.value
             node = node.next
@@ -172,6 +161,25 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # for i in self.table:
+        #     print(f'element: {i}')
+
+        resized = HashTable(new_capacity)
+
+        for index in self.table:
+            if index:
+                current = index
+                while current:
+                    # store its key/value into new hash table
+                    resized.put(current.key, current.value)
+                    # if so, change current to it
+                    current = current.next
+                    # if non next, move to next index
+        
+        self.capacity = new_capacity
+        self.table = resized.table
+                    
+            
 
 # class LinkedList:
 #     def __init__(self):
