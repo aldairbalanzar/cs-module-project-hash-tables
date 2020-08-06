@@ -1,5 +1,15 @@
+import re
+
 def no_dups(s):
     # Your code here
+    s = s.split(" ")
+    words_set = list(dict.fromkeys(s))
+    new_string = ""
+
+    for word in words_set:
+        new_string += " " + word
+    
+    return new_string.strip()
 
 
 
