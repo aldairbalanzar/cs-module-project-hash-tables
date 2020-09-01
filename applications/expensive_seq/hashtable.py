@@ -105,7 +105,7 @@ class HashTable:
                 node = current.next
 
         if self.get_load_factor() > 0.7:
-            print(f'LOAD_FACTOR : {self.get_load_factor()}')
+            # print(f'LOAD_FACTOR : {self.get_load_factor()}')
             self.resize(self.capacity * 2)
             
 
